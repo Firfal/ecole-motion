@@ -62,16 +62,24 @@ Différences volontaires avec Webflow :
 
 `.github/workflows/deploy.yml` :
 - **pull request** → URL de prévisualisation Firebase (valable 7 jours) postée sur la PR ;
-- **push sur `main`** → mise en production (Hosting + règles Firestore).
+- **push sur `main`** → mise en production.
 
-À configurer une fois :
-1. Console Google Cloud du projet `ecole-motion` → *IAM → Comptes de service* →
-   créer un compte avec les rôles **Firebase Hosting Admin**, **Firebase Rules Admin**,
-   **Cloud Datastore Index Admin** et **Service Account User**, puis générer une clé JSON.
-   (Ou lancer `npx firebase-tools init hosting:github`, qui crée le compte et le secret tout seul.)
-2. GitHub → *Settings → Secrets and variables → Actions* → secret
-   `FIREBASE_SERVICE_ACCOUNT` = contenu du JSON.
-3. Console Firebase → activer **Firestore** (mode production) pour les formulaires.
+À configurer une fois, **depuis un clone de ce dépôt** (le dossier doit contenir `firebase.json`) :
+
+```sh
+git clone https://github.com/Firfal/ecole-motion.git && cd ecole-motion
+npx firebase-tools login
+npx firebase-tools init hosting:github
+```
+- dépôt : `Firfal/ecole-motion` → la commande crée le compte de service et le secret
+  GitHub `FIREBASE_SERVICE_ACCOUNT_ECOLE_MOTION` ;
+- « Set up the workflow to run a build script before every deploy? » → **No** ;
+- « Set up automatic deployment to your site's live channel when a PR is merged? » → **No**
+  (le workflow du dépôt s'en charge déjà) ; supprimer ensuite les éventuels fichiers
+  `.github/workflows/firebase-hosting-*.yml` générés, sans les commiter.
+
+Formulaires : activer **Firestore** (console Firebase → Firestore Database → Créer, mode
+production) puis publier les règles une fois : `npx firebase-tools deploy --only firestore`.
 
 ## Bascule du domaine (couper Webflow)
 

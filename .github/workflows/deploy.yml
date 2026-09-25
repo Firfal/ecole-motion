@@ -24,15 +24,15 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ECOLE_MOTION }}
           projectId: ecole-motion
           expires: 7d
 
-      # main : mise en production (hébergement + règles Firestore des formulaires)
+      # main : mise en production
       - if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-        run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/sa.json"
-          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
-          npx --yes firebase-tools@latest deploy --only hosting,firestore --project ecole-motion --non-interactive
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ECOLE_MOTION }}
+          projectId: ecole-motion
+          channelId: live
