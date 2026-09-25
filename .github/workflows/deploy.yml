@@ -1,0 +1,45 @@
+name: Déploiement Firebase
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Le GITHUB_TOKEN du dépôt est en lecture seule par défaut : l'action Firebase
+# doit créer un check « Deploy Preview » et commenter la PR avec l'URL.
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Vérifie que le site est autonome (aucun lien cassé ni ressource Webflow)
+        run: npm run check
+
+      # Pull request : canal de prévisualisation temporaire (URL postée en commentaire)
+      - if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ECOLE_MOTION }}
+          projectId: ecole-motion
+          expires: 7d
+
+      # main : mise en production
+      - if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ECOLE_MOTION }}
+          projectId: ecole-motion
+          channelId: live
