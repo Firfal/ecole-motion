@@ -340,10 +340,9 @@ async function crawlPage(p) {
   let html = $.html()
   // toutes les URLs d'hôtes Webflow restantes (src, srcset, data-*, JSON lightbox, meta…)
   html = rewriteText(html, entry.url)
-  // og:image / twitter:image doivent rester absolues
-  html = html.replace(
-    /(<meta[^>]+(?:property|name)="(?:og:image|twitter:image)"[^>]+content=")(\/[^"]+)"/g,
-    (_, a, p2) => `${a}${ORIGIN}${p2}"`,
+  // og:image / twitter:image doivent rester absolues (Webflow écrit content= AVANT property=)
+  html = html.replace(/<meta\b[^>]*"(?:og:image|twitter:image)"[^>]*>/g, (tag) =>
+    tag.replace(/content="(\/[^"]*)"/, (_, p2) => `content="${ORIGIN}${p2}"`),
   )
   await writeOut(entry.file, html)
 }

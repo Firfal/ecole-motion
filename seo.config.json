@@ -1,0 +1,147 @@
+{
+  "origin": "https://www.ecolemotion.com",
+  "organization": {
+    "name": "Ecole Motion",
+    "logo": "/images/6508781abf8b4c993bf856ff_Logo-temporaire-5.webp",
+    "sameAs": [
+      "https://www.youtube.com/channel/UCEcPdVpC-CvypFundtkv0Eg"
+    ]
+  },
+  "css": [
+    "/* vignettes des tutoriels : largeur finale réservée avant chargement (CLS 0,53 → 0) */",
+    ".image-9{width:100%}"
+  ],
+  "deferIframes": [
+    "miro.com"
+  ],
+  "pages": {
+    "/": {
+      "jsonld": [
+        "organization",
+        "website",
+        "course",
+        "faq"
+      ],
+      "course": {
+        "name": "Maîtriser After Effects de A à Z",
+        "description": "Une formation pour débuter sur After Effects et maîtriser les bases du Motion Design : techniques essentielles, astuces de professionnels et animation de personnage."
+      }
+    },
+    "/formation-freelance": {
+      "demoteExtraH1": true,
+      "jsonld": [
+        "course",
+        "faq"
+      ],
+      "course": {
+        "name": "Formation Freelance Motion Design",
+        "description": "90 jours pour lancer et développer son activité de motion designer freelance : prospection, tarification, gestion de projet client et mentorat individuel."
+      }
+    },
+    "/code-youtube": {
+      "canonical": "/",
+      "sitemap": false
+    },
+    "/lancement": {
+      "canonical": "/",
+      "sitemap": false
+    },
+    "/cgv": {
+      "title": "Conditions générales de vente | Ecole Motion"
+    },
+    "/ressources/fichiers-sources": {
+      "title": "Fichiers sources After Effects gratuits | Ecole Motion",
+      "description": "Téléchargez gratuitement les fichiers sources de plus de 25 tutoriels After Effects : effets de texte, 3D, liquides, dégradés, compteurs et bien plus."
+    },
+    "/ressources/pack-de-texture": {
+      "title": "Pack de textures gratuit | Ecole Motion"
+    },
+    "/ressources/fichier-source": {
+      "noindex": true,
+      "title": "Recevoir le fichier source | Ecole Motion",
+      "description": "Recevez gratuitement par e-mail le fichier source After Effects du tutoriel."
+    },
+    "/ressources/mail-envoye": {
+      "noindex": true,
+      "title": "Le fichier arrive ! | Ecole Motion"
+    },
+    "/design-system": {
+      "noindex": true
+    },
+    "/search": {
+      "noindex": true,
+      "title": "Recherche | Ecole Motion"
+    },
+    "/404": {
+      "noindex": true
+    }
+  },
+  "eagerImages": {
+    "*": [
+      "Logo-temporaire-5.webp"
+    ],
+    "/ressources/pack-de-texture": [
+      "01_Wallpaper.webp",
+      "02_Pres-1.webp",
+      "03_Pres-2.webp",
+      "04_Pres-3.webp",
+      "05_Pres-4.webp"
+    ],
+    "/ressources/fichiers-sources": [
+      "Cours-After-Effects.avif",
+      "Barre-de-recherche.avif",
+      "Texte-sur-un-trace.jpg",
+      "Animation-de-plante.avif",
+      "Planete-en-3D.avif",
+      "Animation-ADN.avif",
+      "Piece-en-3D.jpg",
+      "Element-en-orbite.jpg"
+    ],
+    "/ressources/mail-envoye": [
+      "02_Votre-premiere-animation.webp"
+    ]
+  },
+  "alts": {
+    "Clients_Blanc.png": "Logos des clients de Théo Robert",
+    "User-4.png": "Sengo Nseke, monteur vidéo",
+    "User-1.png": "Gauthier, monteur vidéo",
+    "Valerie.jpg": "Valérie, créative passionnée",
+    "Course.png": "Aperçu de la plateforme de la formation freelance",
+    "01_Des-modules-video.jpg": "Des modules vidéo concrets",
+    "02_3-mois-de-mentorat-individuel.jpg": "3 mois de mentorat individuel",
+    "03_Templates-Resources.jpg": "Templates et ressources",
+    "04_Gestion-de-projet-client_-tout-le-processus-de-A-a-Z.jpg": "Gestion de projet client de A à Z",
+    "05_Presentation-concrete-d-un-projet-client-personnel.jpg": "Présentation concrète d'un projet client",
+    "06_Un-contact-direct-avec-moi-par-message.jpg": "Un contact direct par message",
+    "Image_Accompagnement.png": "Accompagnement individuel avec Théo Robert",
+    "01_Le-template-notion-pour-piloter-toute-mon-activite.jpg": "Template Notion pour piloter son activité de freelance",
+    "02_Mes-factures-devis-et-contrats.-Revus-par-un-avocat.jpg": "Factures, devis et contrats revus par un avocat",
+    "03_Le-deck-de-presentation-que-j-utilise-lors-de-mes-appels-": "Deck de présentation pour les appels clients",
+    "04_Une-cartographie-detaillee-de-toutes-les-automatisations-": "Cartographie des automatisations de l'activité",
+    "Cours-After-Effects.avif": "Tutoriel After Effects débutant",
+    "Barre-de-recherche.avif": "Tutoriel After Effects : barre de recherche animée",
+    "Texte-sur-un-trace.jpg": "Tutoriel After Effects : texte le long d'un tracé",
+    "Animation-de-plante.avif": "Tutoriel After Effects : animation de plante",
+    "Planete-en-3D.avif": "Tutoriel After Effects : planète en 3D",
+    "Animation-ADN.avif": "Tutoriel After Effects : animation ADN",
+    "Piece-en-3D.jpg": "Tutoriel After Effects : pièce en 3D",
+    "Element-en-orbite.jpg": "Tutoriel After Effects : élément en orbite",
+    "Animer-une-fleche.avif": "Tutoriel After Effects : animer une flèche",
+    "Animer-des-pointilles.jpg": "Tutoriel After Effects : animer des pointillés",
+    "Texte-scripte.avif": "Tutoriel After Effects : texte scripté",
+    "Reflexion-de-lumiere.jpg": "Tutoriel After Effects : réflexion de lumière",
+    "Points-de-trace.avif": "Tutoriel After Effects : points de tracé",
+    "Effet-glassmorphisme.avif": "Tutoriel After Effects : effet glassmorphisme",
+    "Graphique-circulaire-.jpg": "Tutoriel After Effects : graphique circulaire",
+    "Onde-progressive.jpg": "Tutoriel After Effects : effet vague",
+    "Effet-stickers.avif": "Tutoriel After Effects : effet stickers",
+    "Effet-loupe.avif": "Tutoriel After Effects : effet loupe",
+    "Effet-liquide.avif": "Tutoriel After Effects : effet liquide",
+    "Effet-Echo.avif": "Tutoriel After Effects : effet écho",
+    "Debuter-sur-After-Effects.avif": "Débuter sur After Effects",
+    "Animer-nombre.avif": "Tutoriel After Effects : animer un compteur",
+    "Animer-une-ligne.avif": "Tutoriel After Effects : animer une ligne",
+    "Animer-un-liquide.avif": "Tutoriel After Effects : animer un liquide",
+    "Animation-degrade.avif": "Tutoriel After Effects : animer un dégradé"
+  }
+}

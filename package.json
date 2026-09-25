@@ -4,6 +4,7 @@
   "description": "Site ecolemotion.com — migration Webflow → Firebase Hosting (compatible Instatic)",
   "scripts": {
     "mirror": "node scripts/mirror.mjs",
+    "seo": "node scripts/seo.mjs",
     "check": "node scripts/check.mjs",
     "serve": "npx --yes firebase-tools@latest emulators:start --only hosting",
     "instatic": "node scripts/package-instatic.mjs",
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/Firfal/ecole-motion#readme",
   "devDependencies": {
     "cheerio": "^1.2.0",
+    "sharp": "^0.35.4",
     "undici": "^8.11.2"
   },
   "private": true,
