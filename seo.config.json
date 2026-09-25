@@ -11,6 +11,9 @@
     "/* vignettes des tutoriels : largeur finale réservée avant chargement (CLS 0,53 → 0) */",
     ".image-9{width:100%}"
   ],
+  "deferIframes": [
+    "miro.com"
+  ],
   "pages": {
     "/": {
       "jsonld": [

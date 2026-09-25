@@ -235,8 +235,19 @@ for (const file of htmlFiles) {
       const t = IFRAME_TITLES.find(([re]) => re.test(src))
       if (t) $f.attr('title', t[1])
     }
+    // intégrations très lourdes (Miro ≈ 10 Mo) : src posée seulement à l'approche de l'écran,
+    // le lazy-loading natif de Chrome les chargeait plusieurs milliers de pixels à l'avance
+    if ((config.deferIframes || []).some((d) => src.includes(d))) {
+      $f.attr('data-seo-src', src).removeAttr('src')
+    }
     stats.iframes++
   })
+  $('script[data-seo-defer]').remove()
+  if ($('iframe[data-seo-src]').length) {
+    $('body').append(
+      `<script data-seo-defer>(function(){var fs=[].slice.call(document.querySelectorAll('iframe[data-seo-src]'));var load=function(f){f.src=f.getAttribute('data-seo-src');f.removeAttribute('data-seo-src')};if(!('IntersectionObserver' in window)){fs.forEach(load);return}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){io.unobserve(e.target);load(e.target)}})},{rootMargin:'300px'});fs.forEach(function(f){io.observe(f)})})();</script>`,
+    )
+  }
 
   // --- agenda Cal.com : chargé seulement quand on s'en approche (~1 Mo de JS en moins au chargement)
   $('script:not([src])').each((_, el) => {
