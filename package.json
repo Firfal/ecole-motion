@@ -1,0 +1,26 @@
+{
+  "name": "ecole-motion",
+  "version": "1.0.0",
+  "description": "Site ecolemotion.com — migration Webflow → Firebase Hosting (compatible Instatic)",
+  "scripts": {
+    "mirror": "node scripts/mirror.mjs",
+    "check": "node scripts/check.mjs",
+    "serve": "npx --yes firebase-tools@latest emulators:start --only hosting",
+    "instatic": "node scripts/package-instatic.mjs",
+    "deploy": "npx --yes firebase-tools@latest deploy --only hosting,firestore"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Firfal/ecole-motion.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Firfal/ecole-motion/issues"
+  },
+  "homepage": "https://github.com/Firfal/ecole-motion#readme",
+  "devDependencies": {
+    "cheerio": "^1.2.0",
+    "undici": "^8.11.2"
+  },
+  "private": true,
+  "type": "module"
+}

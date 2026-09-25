@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Soumissions des formulaires du site : création publique, lecture interdite
+    // (consultation via la console Firebase ou l'admin).
+    match /form_submissions/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['form', 'page', 'fields', 'createdAt', 'userAgent'])
+        && request.resource.data.form is string && request.resource.data.form.size() < 200
+        && request.resource.data.page is string && request.resource.data.page.size() < 500
+        && request.resource.data.fields is map && request.resource.data.fields.size() < 50
+        && request.resource.data.createdAt == request.time;
+      allow read, update, delete: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
