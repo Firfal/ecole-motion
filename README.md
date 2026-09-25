@@ -42,6 +42,22 @@ npm run deploy     # déploiement manuel (nécessite `firebase login`)
 - `site/_mirror-report.json` liste les pages, ressources, formulaires, scripts
   tiers et erreurs éventuelles.
 
+## État de la copie
+
+Vérifiée par comparaison pixel à pixel avec le site en ligne (après défilement complet,
+pour déclencher les animations) sur 3 largeurs : 1440 px, 800 px et 390 px.
+Les 11 pages sont identiques (0,00 % d'écart, mêmes hauteurs), le menu mobile aussi.
+
+Différences volontaires avec Webflow :
+- **404** : Webflow servait sa page d'erreur générique en anglais ; elle est remplacée
+  par une 404 aux couleurs du site.
+- **/search** : la recherche Webflow (côté serveur) est remplacée par une recherche
+  locale sur `search-index.json`.
+- **Google Analytics** : le tag « first-party » servi par Webflow est remplacé par le
+  chargement standard de `gtag.js` (même identifiant G-L758FQVZNZ).
+- **Formulaires** : enregistrés dans Firestore (`form_submissions`) au lieu de Webflow.
+  Pour recevoir un e-mail à chaque envoi : extension Firebase *Trigger Email*.
+
 ## Déploiement automatique (GitHub Actions)
 
 `.github/workflows/deploy.yml` :
@@ -77,5 +93,9 @@ Workflow proposé :
 1. Lancer Instatic (`docker compose … up`, voir leur README) — en local ou sur un petit serveur.
 2. `npm run instatic` puis, dans Instatic, **Super Import** → déposer `dist/instatic-import.zip`
    (pages, styles éditables, médias, polices et scripts sont importés, les liens entre pages sont reliés).
+   À l'étape *Conflicts*, choisir **Overwrite** pour la page `index` (sinon elle arrive en `index-2`
+   à côté de la page d'accueil vide créée par Instatic).
+   Vérifié avec le pipeline d'import d'Instatic 0.0.20 : 12 pages, 919 règles CSS, 356 médias,
+   5 polices, 6 couleurs, 50 scripts, aucun avertissement bloquant.
 3. Éditer visuellement dans Instatic, publier, puis déployer le HTML publié sur Firebase
    (ou héberger directement le site sur l'instance Instatic).

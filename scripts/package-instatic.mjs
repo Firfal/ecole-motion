@@ -12,6 +12,7 @@
  */
 import * as cheerio from 'cheerio'
 import { execFileSync } from 'node:child_process'
+import { writeFileSync } from 'node:fs'
 import { cp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
@@ -52,6 +53,35 @@ for (const rel of htmlFiles) {
     $(el).attr('href', relHref + (m[2] || ''))
   })
   await writeFile(file, $.html())
+}
+
+// Ajustements CSS pour Instatic (le site Firebase n'est pas touché) :
+//  - les noms de variables CSS non ASCII (« --blanc-cassé ») sont refusés → translittérés ;
+//  - les polices intégrées en data: URI (webflow-icons : hamburger, flèches…) sont
+//    ignorées → extraites en vrais fichiers dans fonts/.
+const asciiVar = (name) => name.normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9_-]/g, '-')
+const nonAsciiVars = new Set()
+const textFiles = files.filter((f) => /\.(css|html)$/.test(f))
+for (const f of textFiles) {
+  for (const m of (await readFile(f, 'utf8')).matchAll(/--[A-Za-z0-9_À-￿-]*[^\x00-\x7F][A-Za-z0-9_À-￿-]*/g)) nonAsciiVars.add(m[0])
+}
+let fontIndex = 0
+for (const f of textFiles) {
+  let text = await readFile(f, 'utf8')
+  for (const v of nonAsciiVars) text = text.split(v).join(asciiVar(v))
+  if (f.endsWith('.css')) {
+    text = text.replace(
+      /(@font-face\s*{[^}]*?font-family:\s*['"]?([^'";]+)['"]?[^}]*?)url\(\s*['"]?data:(?:application|font)\/(x-font-)?(woff2?|ttf|truetype|opentype|otf)(?:;[^;,]*?)*?;base64,([A-Za-z0-9+/=]+)['"]?\s*\)/g,
+      (m, before, family, _x, fmt, b64) => {
+        const ext = { truetype: 'ttf', opentype: 'otf' }[fmt] || fmt
+        const name = `fonts/${family.trim().replace(/[^A-Za-z0-9_-]+/g, '-')}-${++fontIndex}.${ext}`
+        execFileSync('mkdir', ['-p', path.join(OUT, 'fonts')])
+        writeFileSync(path.join(OUT, name), Buffer.from(b64, 'base64'))
+        return `${before}url('/${name}')`
+      },
+    )
+  }
+  await writeFile(f, text)
 }
 
 execFileSync('zip', ['-qr', '../instatic-import.zip', '.'], { cwd: OUT })

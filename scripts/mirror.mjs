@@ -54,6 +54,7 @@ const usedLocal = new Map() // local path -> url
 const errors = []
 const forms = []
 const externalScripts = new Set()
+const searchIndex = []
 
 // ---------------------------------------------------------------- utilitaires
 
@@ -98,6 +99,8 @@ function localNameFor(absUrl) {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^A-Za-z0-9._-]+/g, '-')
     .replace(/-+/g, '-')
+    .replace(/\.{2,}/g, '.') // « avocat..jpg » : Instatic rejette tout chemin contenant « .. »
+    .replace(/^[.-]+/, '')
   if (base.length > 120) {
     const ext = path.extname(base)
     base = base.slice(0, 110 - ext.length) + ext
@@ -285,9 +288,53 @@ async function crawlPage(p) {
     $(el).attr('style', await rewriteCss($(el).attr('style'), entry.url))
   }
 
+  // --- nettoyage de ce qui dépend de l'hébergement Webflow ---
+  // Les empreintes SRI (integrity=) ne correspondent plus : les CSS/JS rapatriés
+  // ont leurs URLs réécrites. On les retire pour les fichiers devenus locaux.
+  $('link[integrity],script[integrity]').each((_, el) => {
+    const ref = $(el).attr('href') || $(el).attr('src')
+    try {
+      if (isAssetHost(new URL(ref, entry.url).host)) $(el).removeAttr('integrity').removeAttr('crossorigin')
+    } catch {}
+  })
+  // preconnect/dns-prefetch vers le CDN Webflow : inutiles une fois les fichiers locaux
+  $('link[rel=preconnect],link[rel=dns-prefetch]').each((_, el) => {
+    try {
+      if (isAssetHost(new URL($(el).attr('href'), entry.url).host)) $(el).remove()
+    } catch {}
+  })
+  // Google tag servi en « first-party » par l'hébergement Webflow (/xxxx/yyyy) :
+  // on revient au chargement standard de gtag.js, qui fonctionne partout.
+  $('script').each((_, el) => {
+    const code = $(el).html() || ''
+    const m = code.match(/\['(G-[A-Z0-9]+)'\],'google_tags_first_party'/)
+    if (!m) return
+    const next = $(el).next('script[src]')
+    if (next.length && /^\/[A-Za-z0-9]{20,}\/[A-Za-z0-9_-]+$/.test(next.attr('src'))) {
+      next.attr('src', `https://www.googletagmanager.com/gtag/js?id=${m[1]}`)
+    }
+    $(el).remove()
+  })
+  // recherche de site Webflow (côté serveur) → recherche locale
+  if (p === '/search') {
+    $('body').append('<script src="/js/site-search.js" defer></script>\n')
+  }
+
   // remplace le traitement Webflow Forms par Firestore
   if ($('.w-form form').length && !$('script[src="/js/forms-firebase.js"]').length) {
     $('body').append('<script src="/js/forms-firebase.js" defer></script>\n')
+  }
+
+  // index de recherche (remplace la recherche Webflow)
+  if (!['/404', '/search'].includes(p) && !$('meta[name=robots][content*=noindex]').length) {
+    const $t = cheerio.load($('body').html() || '')
+    $t('script,style,noscript,nav,footer,form,.w-nav,.w-form').remove()
+    searchIndex.push({
+      path: p,
+      title: $('title').text().trim(),
+      description: $('meta[name=description]').attr('content') || '',
+      text: $t.text().replace(/\s+/g, ' ').trim().slice(0, 20000),
+    })
   }
 
   let html = $.html()
@@ -299,6 +346,38 @@ async function crawlPage(p) {
     (_, a, p2) => `${a}${ORIGIN}${p2}"`,
   )
   await writeOut(entry.file, html)
+}
+
+/**
+ * Webflow ne publie pas de 404 personnalisée pour ce site : il sert sa page
+ * d'erreur générique (en anglais, hébergée chez Webflow). On en construit une
+ * aux couleurs du site à partir d'une page simple (en-tête + pied de page).
+ */
+async function build404() {
+  const { readFile } = await import('node:fs/promises')
+  const file404 = path.join(OUT, '404.html')
+  let current = ''
+  try {
+    current = await readFile(file404, 'utf8')
+  } catch {}
+  if (current && !/webflow-https-errors/.test(current)) return // vraie 404 du site : on la garde
+  const shellPage = [...pages.values()].find((e) => e.file === 'cgv.html' && e.status === 200) ||
+    [...pages.values()].find((e) => e.file === 'index.html')
+  const $ = cheerio.load(await readFile(path.join(OUT, shellPage.file), 'utf8'), { decodeEntities: false })
+  $('title').text('Page introuvable | Ecole Motion')
+  $('meta[name=description]').attr('content', "Cette page n'existe pas ou a été déplacée.")
+  $('meta[property^="og:"],meta[name^="twitter:"],link[rel=canonical]').remove()
+  $('head').append('<meta name="robots" content="noindex">')
+  const main = $('body > .w-container').first()
+  main.html(
+    '<div style="text-align:center;padding:120px 0 140px">' +
+      '<h1>404</h1>' +
+      "<h2>Page introuvable</h2>" +
+      "<p>La page que vous cherchez n'existe pas ou a été déplacée.</p>" +
+      '<a href="/" class="button w-button" style="display:inline-block;width:auto;padding-left:48px;padding-right:48px">Retour à l\'accueil</a>' +
+      '</div>',
+  )
+  await writeOut('404.html', $.html())
 }
 
 // ---------------------------------------------------------------------- main
@@ -343,6 +422,11 @@ async function main() {
     await Promise.all(all)
   }
   process.stdout.write('\n')
+
+  await build404()
+
+  searchIndex.sort((a, b) => a.path.localeCompare(b.path))
+  await writeOut('search-index.json', JSON.stringify(searchIndex))
 
   // fichiers propres au projet (static/) copiés par-dessus le miroir
   await cp(path.resolve('static'), OUT, { recursive: true })
