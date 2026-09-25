@@ -65,6 +65,13 @@ for (const f of files) {
       if (isFile ? !localExists(a.href) : !pageExists(a.href)) problems.push(`${rel}: lien cassé ${a.href}`)
     }
   })
+  // SEO : image de partage absolue, chaque page soit canonique soit en noindex
+  $('meta[property="og:image"],meta[name="twitter:image"]').each((_, el) => {
+    if (!/^https:\/\//.test($(el).attr('content') || '')) problems.push(`${rel}: og:image/twitter:image non absolue`)
+  })
+  if (!$('link[rel="canonical"]').length && !/noindex/.test($('meta[name="robots"]').attr('content') || '')) {
+    problems.push(`${rel}: ni canonical ni noindex`)
+  }
   if (WEBFLOW_RE.test(html.replace(/<!--[\s\S]*?-->/g, ''))) {
     const m = html.match(new RegExp(`.{0,60}${WEBFLOW_RE.source}.{0,60}`))
     problems.push(`${rel}: référence Webflow restante … ${m && m[0]}`)

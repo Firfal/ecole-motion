@@ -16,11 +16,19 @@ firebase.json          ← hébergement (URLs propres, cache, redirections) + Fi
 firestore.rules        ← formulaires : création publique, lecture interdite
 ```
 
+## SEO
+
+`npm run seo` applique à `site/` les corrections SEO décrites dans `seo.config.json`
+(titres, descriptions, canonical, noindex, sitemap, données structurées, textes alt,
+images WebP, dimensions d'images, chargement différé des iframes et de Cal.com).
+Le script est idempotent. Après une nouvelle aspiration : `npm run mirror && npm run seo`.
+
 ## Commandes
 
 ```sh
 npm ci
 npm run mirror     # (ré)aspire le site en ligne dans site/
+npm run seo        # corrections SEO (seo.config.json)
 npm run check      # contrôle d'intégrité (aussi lancé par la CI)
 npm run serve      # prévisualisation locale sur http://localhost:5000
 npm run instatic   # dist/instatic-import.zip
