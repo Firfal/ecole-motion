@@ -357,6 +357,23 @@ for (const file of htmlFiles) {
   texts.set(file, $.html())
 }
 
+// --- empreinte de contenu sur le CSS et le JS locaux (?v=…) : ils sont mis en cache longtemps
+// (firebase.json), le paramètre change dès que leur contenu change → jamais de fichier périmé
+const { createHash } = await import('node:crypto')
+const versionOf = new Map()
+for (const f of files.filter((x) => /\.(css|js)$/.test(x))) {
+  const body = texts.has(f) ? texts.get(f) : await readFile(f)
+  versionOf.set('/' + path.relative(ROOT, f), createHash('sha256').update(body).digest('hex').slice(0, 10))
+}
+for (const f of htmlFiles) {
+  texts.set(
+    f,
+    texts.get(f).replace(/(<(?:link|script)\b[^>]*?\s(?:href|src)=")(\/[^"?#]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"/g, (m, a, url) =>
+      versionOf.has(url) ? `${a}${url}?v=${versionOf.get(url)}"` : m,
+    ),
+  )
+}
+
 for (const [f, t] of texts) await writeFile(f, t)
 
 // ------------------------------------------------------------- 3. sitemap
