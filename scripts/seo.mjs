@@ -297,6 +297,11 @@ for (const file of htmlFiles) {
       wfCall.remove()
     }
   }
+  // scripts tiers retirés (config « removeScripts » : fragments d'URL ou de code)
+  for (const needle of config.removeScripts || []) {
+    $('script').filter((_, el) => ($(el).attr('src') || '').includes(needle) || ($(el).html() || '').includes(needle)).remove()
+  }
+  $('*').contents().filter((_, n) => n.type === 'comment' && (config.removeScripts || []).length && /Hotjar/i.test(n.data)).remove()
   // Hotjar chargé après la page (le script d'origine pèse sur le temps de blocage)
   $('script:not([src])').each((_, el) => {
     const code = $(el).html() || ''
