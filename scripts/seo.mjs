@@ -369,6 +369,18 @@ for (const file of htmlFiles) {
   // avant DOMContentLoaded, comme aujourd'hui, mais sans retarder le premier rendu
   if (config.deferBodyScripts) $('body script[src]:not([async])').attr('defer', '')
 
+  // --- Google Analytics (≈175 Ko de JS) chargé à la première interaction ou 4 s après le chargement.
+  // La configuration inline (dataLayer, gtag('config')) reste en place : la page vue est envoyée
+  // dès que gtag.js arrive.
+  if (config.delayGtag) {
+    $('script[src*="googletagmanager.com/gtag/js"]').each((_, el) => {
+      const src = $(el).attr('src').replace(/&amp;/g, '&').replace(/'/g, '')
+      $(el).replaceWith(
+        `<script data-seo-gtag>(function(){var d=0,ev=['pointerdown','keydown','scroll','touchstart'];function l(){if(d)return;d=1;ev.forEach(function(e){removeEventListener(e,l,true)});var s=document.createElement('script');s.async=true;s.src='${src}';document.head.appendChild(s)}ev.forEach(function(e){addEventListener(e,l,{capture:true,passive:true,once:true})});addEventListener('load',function(){setTimeout(l,4000)})})();</script>`,
+      )
+    })
+  }
+
   // --- iframes
   $('iframe').each((_, el) => {
     const $f = $(el)
