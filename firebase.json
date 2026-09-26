@@ -10,7 +10,7 @@
     "trailingSlash": false,
     "headers": [
       {
-        "source": "**/*.@(css|woff|woff2|ttf|otf|eot|jpg|jpeg|png|gif|webp|avif|svg|ico|mp4|webm|lottie)",
+        "source": "**/*.@(css|js|woff|woff2|ttf|otf|eot|jpg|jpeg|png|gif|webp|avif|svg|ico|mp4|webm|lottie)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -19,11 +19,11 @@
         ]
       },
       {
-        "source": "**/*.@(js|json)",
+        "source": "**/*.json",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=604800"
+            "value": "public, max-age=3600"
           }
         ]
       },

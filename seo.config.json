@@ -165,6 +165,18 @@
   ],
   "vimeoFacade": true,
   "deferBodyScripts": true,
+  "srcsets": {
+    "img.image-3": {
+      "widths": [240, 320],
+      "sizes": "(max-width: 479px) 116px, 154px"
+    }
+  },
+  "localScripts": {
+    "https://cdn.jsdelivr.net/npm/@justaa/scripts/dist/util/countdown.js": {
+      "file": "/js/countdown.js",
+      "onlyIf": "[js-util-countdown]"
+    }
+  },
   "delayGtag": true,
   "preloadFonts": [
     "MonaSans-Black."
