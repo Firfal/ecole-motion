@@ -2052,7 +2052,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd1cd408e65048dfb69_MonaSansCondensed-BoldItalic.ttf") format("truetype"), url("/fonts/66fd0cd1817a34b05a62c27f_MonaSansCondensed-ExtraBoldItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1cd408e65048dfb69_MonaSansCondensed-BoldItalic.woff2") format("woff2"), url("/fonts/66fd0cd1817a34b05a62c27f_MonaSansCondensed-ExtraBoldItalic.woff2") format("woff2");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -2060,7 +2060,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1c96fd48275a9889c_MonaSans-LightItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1c96fd48275a9889c_MonaSans-LightItalic.woff2") format("woff2");
   font-weight: 300;
   font-style: italic;
   font-display: swap;
@@ -2068,7 +2068,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd15ae72d746815933a_MonaSans-Italic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd15ae72d746815933a_MonaSans-Italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -2076,7 +2076,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1ec8658655258d0b8_MonaSans-ExtraLight.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1ec8658655258d0b8_MonaSans-ExtraLight.woff2") format("woff2");
   font-weight: 200;
   font-style: normal;
   font-display: swap;
@@ -2084,7 +2084,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd18ae8c0d9b27ed76a_MonaSans-Black.ttf") format("truetype");
+  src: url("/fonts/66fd0cd18ae8c0d9b27ed76a_MonaSans-Black.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -2092,7 +2092,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1eb66900815ee9593_MonaSans-Bold.ttf") format("truetype"), url("/fonts/66fd0cd1689da45ca8798942_MonaSans-ExtraBold.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1eb66900815ee9593_MonaSans-Bold.woff2") format("woff2"), url("/fonts/66fd0cd1689da45ca8798942_MonaSans-ExtraBold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -2100,7 +2100,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1299f533c48140cb8_MonaSans-Medium.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1299f533c48140cb8_MonaSans-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -2108,7 +2108,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd1a6c74a0b97fc6b9a_MonaSansCondensed-Bold.ttf") format("truetype"), url("/fonts/66fd0cd1c54abc1685e388d6_MonaSansCondensed-ExtraBold.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1a6c74a0b97fc6b9a_MonaSansCondensed-Bold.woff2") format("woff2"), url("/fonts/66fd0cd1c54abc1685e388d6_MonaSansCondensed-ExtraBold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -2116,7 +2116,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd131c6aa3109f7e875_MonaSans-Regular.ttf") format("truetype");
+  src: url("/fonts/66fd0cd131c6aa3109f7e875_MonaSans-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -2124,7 +2124,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd101c8d8fdc3eabc8e_MonaSans-BoldItalic.ttf") format("truetype"), url("/fonts/66fd0cd1573a9493d43db585_MonaSans-ExtraBoldItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd101c8d8fdc3eabc8e_MonaSans-BoldItalic.woff2") format("woff2"), url("/fonts/66fd0cd1573a9493d43db585_MonaSans-ExtraBoldItalic.woff2") format("woff2");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -2132,7 +2132,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1de617cc8161a81f8_MonaSans-SemiBold.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1de617cc8161a81f8_MonaSans-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -2140,7 +2140,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1c54abc1685e388c4_MonaSans-SemiBoldItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1c54abc1685e388c4_MonaSans-SemiBoldItalic.woff2") format("woff2");
   font-weight: 600;
   font-style: italic;
   font-display: swap;
@@ -2148,7 +2148,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd13b8e43b00dd2f081_MonaSansCondensed-ExtraLight.ttf") format("truetype");
+  src: url("/fonts/66fd0cd13b8e43b00dd2f081_MonaSansCondensed-ExtraLight.woff2") format("woff2");
   font-weight: 200;
   font-style: normal;
   font-display: swap;
@@ -2156,7 +2156,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd15234cfcfac657408_MonaSansCondensed-Light.ttf") format("truetype");
+  src: url("/fonts/66fd0cd15234cfcfac657408_MonaSansCondensed-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -2164,7 +2164,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd197d236bf9db5a9c7_MonaSansCondensed-BlackItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd197d236bf9db5a9c7_MonaSansCondensed-BlackItalic.woff2") format("woff2");
   font-weight: 900;
   font-style: italic;
   font-display: swap;
@@ -2172,7 +2172,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd15a79653541e67647_MonaSansCondensed-MediumItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd15a79653541e67647_MonaSansCondensed-MediumItalic.woff2") format("woff2");
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -2180,7 +2180,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd15a5b885e97f8e24e_MonaSansCondensed-SemiBold.ttf") format("truetype");
+  src: url("/fonts/66fd0cd15a5b885e97f8e24e_MonaSansCondensed-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -2188,7 +2188,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd16955045471c10154_MonaSansCondensed-Black.ttf") format("truetype");
+  src: url("/fonts/66fd0cd16955045471c10154_MonaSansCondensed-Black.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -2196,7 +2196,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd145289b22e54de6a8_MonaSansCondensed-LightItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd145289b22e54de6a8_MonaSansCondensed-LightItalic.woff2") format("woff2");
   font-weight: 300;
   font-style: italic;
   font-display: swap;
@@ -2204,7 +2204,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd137d6d49dc4d48ecd_MonaSansCondensed-Medium.ttf") format("truetype");
+  src: url("/fonts/66fd0cd137d6d49dc4d48ecd_MonaSansCondensed-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -2212,7 +2212,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd137d6d49dc4d48edf_MonaSansExpanded-BoldItalic.ttf") format("truetype"), url("/fonts/66fd0cd105003e034cd4edbf_MonaSansExpanded-ExtraBoldItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd137d6d49dc4d48edf_MonaSansExpanded-BoldItalic.woff2") format("woff2"), url("/fonts/66fd0cd105003e034cd4edbf_MonaSansExpanded-ExtraBoldItalic.woff2") format("woff2");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -2220,7 +2220,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd133110309ff6f2848_MonaSans-ExtraLightItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd133110309ff6f2848_MonaSans-ExtraLightItalic.woff2") format("woff2");
   font-weight: 200;
   font-style: italic;
   font-display: swap;
@@ -2228,7 +2228,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd19fffdc5b4580eca6_MonaSansExpanded-Bold.ttf") format("truetype"), url("/fonts/66fd0cd1f2aedbee0ea1d889_MonaSansExpanded-ExtraBold.ttf") format("truetype");
+  src: url("/fonts/66fd0cd19fffdc5b4580eca6_MonaSansExpanded-Bold.woff2") format("woff2"), url("/fonts/66fd0cd1f2aedbee0ea1d889_MonaSansExpanded-ExtraBold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -2236,7 +2236,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd1c2263f170394820a_MonaSansCondensed-Italic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1c2263f170394820a_MonaSansCondensed-Italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -2244,7 +2244,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd15234cfcfac657430_MonaSansExpanded-ExtraLight.ttf") format("truetype");
+  src: url("/fonts/66fd0cd15234cfcfac657430_MonaSansExpanded-ExtraLight.woff2") format("woff2");
   font-weight: 200;
   font-style: normal;
   font-display: swap;
@@ -2252,7 +2252,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd19c08d21c49a790bd_MonaSansExpanded-ExtraLightItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd19c08d21c49a790bd_MonaSansExpanded-ExtraLightItalic.woff2") format("woff2");
   font-weight: 200;
   font-style: italic;
   font-display: swap;
@@ -2260,7 +2260,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd1c54abc1685e388f6_MonaSansExpanded-LightItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1c54abc1685e388f6_MonaSansExpanded-LightItalic.woff2") format("woff2");
   font-weight: 300;
   font-style: italic;
   font-display: swap;
@@ -2268,7 +2268,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd1f886de81e2e1c8cd_MonaSansExpanded-Medium.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1f886de81e2e1c8cd_MonaSansExpanded-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -2276,7 +2276,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd1e5a47d5a038f935d_MonaSansExpanded-SemiBold.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1e5a47d5a038f935d_MonaSansExpanded-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -2284,7 +2284,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1573a9493d43db57a_MonaSans-BlackItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1573a9493d43db57a_MonaSans-BlackItalic.woff2") format("woff2");
   font-weight: 900;
   font-style: italic;
   font-display: swap;
@@ -2292,7 +2292,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd181004436472883b5_MonaSansExpanded-Black.ttf") format("truetype");
+  src: url("/fonts/66fd0cd181004436472883b5_MonaSansExpanded-Black.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -2300,7 +2300,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1fb59d72fdf19d22d_MonaSans-MediumItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1fb59d72fdf19d22d_MonaSans-MediumItalic.woff2") format("woff2");
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -2308,7 +2308,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd137d6d49dc4d48eeb_MonaSansExpanded-SemiBoldItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd137d6d49dc4d48eeb_MonaSansExpanded-SemiBoldItalic.woff2") format("woff2");
   font-weight: 600;
   font-style: italic;
   font-display: swap;
@@ -2316,7 +2316,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd100c768950e93b145_MonaSansExpanded-MediumItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd100c768950e93b145_MonaSansExpanded-MediumItalic.woff2") format("woff2");
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -2324,7 +2324,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd17be81b9b23959b20_MonaSansExpanded-Light.ttf") format("truetype");
+  src: url("/fonts/66fd0cd17be81b9b23959b20_MonaSansExpanded-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -2332,7 +2332,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd1a4c9fba43a369beb_MonaSansExpanded-Italic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1a4c9fba43a369beb_MonaSansExpanded-Italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -2340,7 +2340,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasans;
-  src: url("/fonts/66fd0cd1573a9493d43db589_MonaSans-Light.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1573a9493d43db589_MonaSans-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -2348,7 +2348,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd1672c71382ddfa2ec_MonaSansExpanded-Regular.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1672c71382ddfa2ec_MonaSansExpanded-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -2356,7 +2356,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd1bcb7e58eae44d278_MonaSansCondensed-SemiBoldItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd1bcb7e58eae44d278_MonaSansCondensed-SemiBoldItalic.woff2") format("woff2");
   font-weight: 600;
   font-style: italic;
   font-display: swap;
@@ -2364,7 +2364,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd105003e034cd4edbb_MonaSansCondensed-ExtraLightItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd105003e034cd4edbb_MonaSansCondensed-ExtraLightItalic.woff2") format("woff2");
   font-weight: 200;
   font-style: italic;
   font-display: swap;
@@ -2372,7 +2372,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasanscondensed;
-  src: url("/fonts/66fd0cd2b7ca3ed414e11975_MonaSansCondensed-Regular.ttf") format("truetype");
+  src: url("/fonts/66fd0cd2b7ca3ed414e11975_MonaSansCondensed-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -2380,7 +2380,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Monasansexpanded;
-  src: url("/fonts/66fd0cd287f4228b40fb47e7_MonaSansExpanded-BlackItalic.ttf") format("truetype");
+  src: url("/fonts/66fd0cd287f4228b40fb47e7_MonaSansExpanded-BlackItalic.woff2") format("woff2");
   font-weight: 900;
   font-style: italic;
   font-display: swap;
@@ -2388,7 +2388,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Cabinetgrotesk;
-  src: url("/fonts/64fb2c94628acf6135d86f79_CabinetGrotesk-Bold.otf") format("opentype"), url("/fonts/64fb2c95b8e895dcc89cce48_CabinetGrotesk-Extrabold.otf") format("opentype");
+  src: url("/fonts/64fb2c94628acf6135d86f79_CabinetGrotesk-Bold.woff2") format("woff2"), url("/fonts/64fb2c95b8e895dcc89cce48_CabinetGrotesk-Extrabold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -2396,7 +2396,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Cabinetgrotesk;
-  src: url("/fonts/64fb2c94676de36d0704037b_CabinetGrotesk-Light.otf") format("opentype");
+  src: url("/fonts/64fb2c94676de36d0704037b_CabinetGrotesk-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -2404,7 +2404,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Cabinetgrotesk;
-  src: url("/fonts/64fb2c9483baaa5df1147232_CabinetGrotesk-Black.otf") format("opentype");
+  src: url("/fonts/64fb2c9483baaa5df1147232_CabinetGrotesk-Black.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -2412,7 +2412,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Cabinetgrotesk;
-  src: url("/fonts/64fb2c94eac88354dfc12440_CabinetGrotesk-Extralight.otf") format("opentype"), url("/fonts/64fb2c94eac88354dfc12440_CabinetGrotesk-Extralight.otf") format("opentype");
+  src: url("/fonts/64fb2c94eac88354dfc12440_CabinetGrotesk-Extralight.woff2") format("woff2"), url("/fonts/64fb2c94eac88354dfc12440_CabinetGrotesk-Extralight.woff2") format("woff2");
   font-weight: 200;
   font-style: normal;
   font-display: swap;
@@ -2420,7 +2420,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Cabinetgrotesk;
-  src: url("/fonts/64fb2c94012659b63e25b177_CabinetGrotesk-Regular.otf") format("opentype");
+  src: url("/fonts/64fb2c94012659b63e25b177_CabinetGrotesk-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -2428,7 +2428,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Cabinetgrotesk;
-  src: url("/fonts/64fb2c94d874220681e07900_CabinetGrotesk-Thin.otf") format("opentype");
+  src: url("/fonts/64fb2c94d874220681e07900_CabinetGrotesk-Thin.woff2") format("woff2");
   font-weight: 100;
   font-style: normal;
   font-display: swap;
@@ -2436,7 +2436,7 @@ textarea.w-input, textarea.w-select {
 
 @font-face {
   font-family: Cabinetgrotesk;
-  src: url("/fonts/64fb2c94c087160e4c677bd4_CabinetGrotesk-Medium.otf") format("opentype");
+  src: url("/fonts/64fb2c94c087160e4c677bd4_CabinetGrotesk-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;

@@ -162,5 +162,25 @@
       "background-color:\\s*(?:var\\(--purple-700-main\\)|#9d72f9)(?![0-9a-f])",
       "background-color: #824af7"
     ]
+  ],
+  "vimeoFacade": true,
+  "preloadFonts": [
+    "MonaSans-Black."
+  ],
+  "preloadImages": {
+    "/formation-freelance": [
+      "BG_Header.svg"
+    ]
+  },
+  "lcpImages": {
+    "/ressources/fichiers-sources": [
+      "Cours-After-Effects.avif"
+    ],
+    "/ressources/pack-de-texture": [
+      "01_Wallpaper"
+    ]
+  },
+  "responsiveImages": [
+    "image-9"
   ]
 }
