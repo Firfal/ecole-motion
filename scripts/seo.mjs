@@ -342,9 +342,21 @@ for (const file of htmlFiles) {
     const title = ($f.attr('title') || 'Vidéo').replace(/"/g, '&quot;')
     $f.replaceWith(
       `<button type="button" class="seo-vimeo" data-src="${play.replace(/&/g, '&amp;')}" aria-label="Lire la vidéo : ${title}" style="${$f.attr('style') || ''}">` +
-        `<img src="${thumb}" alt="" width="1280" height="720" loading="lazy" decoding="async">` +
+        `<img src="${thumb}" alt="" width="1280" height="720">` +
         `<span class="seo-vimeo-play" aria-hidden="true"></span></button>`,
     )
+  }
+  // les vidéos sont en haut de page (souvent l'élément LCP) : miniature prioritaire, 640 px sur mobile
+  for (const [i, el] of $('.seo-vimeo img').toArray().entries()) {
+    const $img = $(el)
+    const src = $img.attr('src')
+    const small = src.replace(/\.webp$/, '-640.webp')
+    if (!existsSync(path.join(ROOT, small))) {
+      await writeFile(path.join(ROOT, small), await sharp(path.join(ROOT, src)).resize({ width: 640 }).webp({ quality: 80 }).toBuffer())
+    }
+    $img.attr('srcset', `${small} 640w, ${src} 1280w`).attr('sizes', '(max-width: 991px) 100vw, 940px')
+    $img.attr('loading', 'eager').attr('decoding', 'async').removeAttr('fetchpriority')
+    if (i === 0) $img.attr('fetchpriority', 'high')
   }
   $('script[data-seo-vimeo]').remove()
   if ($('.seo-vimeo').length) {
@@ -352,6 +364,10 @@ for (const file of htmlFiles) {
       `<script data-seo-vimeo>document.addEventListener('click',function(e){var b=e.target.closest('.seo-vimeo');if(!b)return;var f=document.createElement('iframe');f.src=b.getAttribute('data-src');f.setAttribute('allow','autoplay; fullscreen; picture-in-picture');f.setAttribute('allowfullscreen','');f.title=b.getAttribute('aria-label');f.style.cssText=b.style.cssText;f.style.border='0';b.replaceWith(f)});</script>`,
     )
   }
+
+  // --- scripts de fin de page (jQuery, Webflow…) : `defer` garde l'ordre d'exécution et les lance
+  // avant DOMContentLoaded, comme aujourd'hui, mais sans retarder le premier rendu
+  if (config.deferBodyScripts) $('body script[src]:not([async])').attr('defer', '')
 
   // --- iframes
   $('iframe').each((_, el) => {
