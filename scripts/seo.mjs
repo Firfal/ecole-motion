@@ -78,6 +78,27 @@ for (const [pattern, replacement] of config.cssReplace || []) {
   for (const f of cssFiles) texts.set(f, texts.get(f).replace(re, replacement))
 }
 
+// ---------------------------------------- 1 ter. polices TTF/OTF → WOFF2
+
+// Les polices uploadées dans Webflow sont en TTF/OTF (≈ 77 Ko chacune) : WOFF2 les divise
+// par 2 à 3. Même dessin de caractères, seule la compression change.
+{
+  const { default: wawoff2 } = await import('wawoff2')
+  for (const f of files) {
+    if (!/\/fonts\/[^/]+\.(ttf|otf)$/i.test(f)) continue
+    const ref = '/' + path.relative(ROOT, f)
+    if (![...texts.values()].some((t) => t.includes(ref))) continue
+    const woffFile = f.replace(/\.(ttf|otf)$/i, '.woff2')
+    const woffRef = '/' + path.relative(ROOT, woffFile)
+    if (!existsSync(woffFile)) await writeFile(woffFile, Buffer.from(await wawoff2.compress(await readFile(f))))
+    for (const [k, t] of texts) {
+      // url("/fonts/x.ttf") format("truetype") → url("/fonts/x.woff2") format("woff2")
+      texts.set(k, t.split(ref).join(woffRef).replace(new RegExp(`(${woffRef.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["']?\\)\\s*format\\()(["'])(?:truetype|opentype)\\2`, 'g'), '$1$2woff2$2'))
+    }
+    await unlink(f)
+  }
+}
+
 // ------------------------------------------------------------ 2. pages HTML
 
 const dimsCache = new Map()
@@ -93,6 +114,23 @@ async function dims(src) {
   }
   dimsCache.set(src, d)
   return d
+}
+
+/** Miniature d'une vidéo Vimeo (oEmbed), enregistrée une fois dans /images/vimeo-<id>.webp */
+async function vimeoThumb(id, hash) {
+  const rel = `/images/vimeo-${id}.webp`
+  const file = path.join(ROOT, rel)
+  if (existsSync(file)) return rel
+  try {
+    const url = `https://vimeo.com/${id}${hash ? '/' + hash : ''}`
+    const meta = await (await fetch(`https://vimeo.com/api/oembed.json?width=1280&url=${encodeURIComponent(url)}`)).json()
+    const img = Buffer.from(await (await fetch(meta.thumbnail_url)).arrayBuffer())
+    await writeFile(file, await sharp(img).resize({ width: 1280 }).webp({ quality: 80 }).toBuffer())
+    return rel
+  } catch (e) {
+    console.warn(`miniature Vimeo ${id} indisponible : ${e.message}`)
+    return null
+  }
 }
 
 function faqFrom($) {
@@ -115,6 +153,12 @@ const SEO_CSS = [
   'h2:where(.was-h3){margin-top:20px;margin-bottom:10px;font-family:Cabinetgrotesk,sans-serif;font-size:24px;font-weight:900;line-height:30px}',
   // zone <main> ajoutée pour l'accessibilité, sans effet sur la mise en page
   'main[data-seo]{display:contents}',
+  // miniature Vimeo cliquable (même emplacement que le lecteur)
+  '.seo-vimeo{display:block;padding:0;border:0;margin:0;cursor:pointer;background:#000;overflow:hidden}',
+  '.seo-vimeo img{width:100%;height:100%;object-fit:cover;display:block}',
+  ".seo-vimeo-play{position:absolute;left:50%;top:50%;width:74px;height:46px;margin:-23px 0 0 -37px;border-radius:8px;background:rgba(23,35,34,.75);transition:background .2s}",
+  ".seo-vimeo-play::after{content:'';position:absolute;left:30px;top:13px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff}",
+  '.seo-vimeo:hover .seo-vimeo-play,.seo-vimeo:focus-visible .seo-vimeo-play{background:#00adef}',
   ...(config.css || []),
 ].join('\n')
 
@@ -238,6 +282,92 @@ for (const file of htmlFiles) {
       $img.attr('loading', 'eager')
     }
   }
+
+  // --- tailles réduites (srcset) pour les images servies en pleine taille alors qu'une image
+  // voisine de même classe en a déjà : on reprend son attribut sizes
+  for (const el of $('img:not([srcset])').toArray()) {
+    const $img = $(el)
+    const src = $img.attr('src') || ''
+    const cls = ($img.attr('class') || '').split(/\s+/).filter((c) => c && !c.startsWith('w-'))[0]
+    // uniquement les classes listées (seo.config.json → responsiveImages) : ailleurs, un srcset
+    // changerait la taille intrinsèque d'images dont la largeur CSS n'est pas fixée
+    if (!cls || !(config.responsiveImages || []).includes(cls)) continue
+    if (!/^\/images\/[^/]+\.(avif|webp|jpe?g|png)$/i.test(src)) continue
+    const sizes = $(`img.${cls}[srcset][sizes]`).first().attr('sizes')
+    const d = await dims(src)
+    if (!sizes || !d || d.width <= 900) continue
+    const file = path.join(ROOT, src)
+    const ext = path.extname(src)
+    const set = []
+    for (const w of [500, 800, 1080].filter((w) => w < d.width)) {
+      const vSrc = src.replace(ext, `-p-${w}${ext}`)
+      const vFile = path.join(ROOT, vSrc)
+      if (!existsSync(vFile)) {
+        const img = sharp(file).resize({ width: w })
+        const fmt = ext.slice(1).toLowerCase().replace('jpg', 'jpeg')
+        await writeFile(vFile, await img.toFormat(fmt, { quality: 72 }).toBuffer())
+      }
+      set.push(`${vSrc} ${w}w`)
+    }
+    set.push(`${src} ${d.width}w`)
+    $img.attr('srcset', set.join(', ')).attr('sizes', sizes)
+  }
+
+  // --- priorité de chargement de l'élément principal (LCP) de la page
+  $('link[data-seo-preload]').remove()
+  for (const name of config.lcpImages?.[p] || []) {
+    const img = $('img').filter((_, e) => ($(e).attr('src') || '').includes(name)).first()
+    if (img.length) img.attr('fetchpriority', 'high').attr('loading', 'eager')
+  }
+  for (const name of config.preloadImages?.[p] || []) {
+    const f = files.find((x) => x.includes('/images/') && x.endsWith(name))
+    if (f) $('head').append(`<link rel="preload" as="image" href="/${path.relative(ROOT, f)}" fetchpriority="high" data-seo-preload>`)
+  }
+  for (const name of config.preloadFonts || []) {
+    const f = files.map((x) => x.replace(/\.(ttf|otf)$/i, '.woff2')).find((x) => x.includes('/fonts/') && x.includes(name))
+    if (f) $('head').append(`<link rel="preload" as="font" type="font/woff2" href="/${path.relative(ROOT, f)}" crossorigin data-seo-preload>`)
+  }
+
+  // --- lecteur Vimeo remplacé par sa miniature, chargé au clic : ni cookies tiers ni ~500 Ko
+  // de JS tant que la vidéo n'est pas lancée
+  for (const el of $('iframe').toArray()) {
+    const $f = $(el)
+    const src = $f.attr('src') || $f.attr('data-seo-src') || ''
+    const m = src.match(/player\.vimeo\.com\/video\/(\d+)(?:\?h=([0-9a-f]+))?/)
+    if (!m || !config.vimeoFacade) continue
+    const thumb = await vimeoThumb(m[1], m[2])
+    if (!thumb) continue
+    const base = /[?&]dnt=1/.test(src) ? src : src + (src.includes('?') ? '&' : '?') + 'dnt=1'
+    const play = base + '&autoplay=1'
+    const title = ($f.attr('title') || 'Vidéo').replace(/"/g, '&quot;')
+    $f.replaceWith(
+      `<button type="button" class="seo-vimeo" data-src="${play.replace(/&/g, '&amp;')}" aria-label="Lire la vidéo : ${title}" style="${$f.attr('style') || ''}">` +
+        `<img src="${thumb}" alt="" width="1280" height="720">` +
+        `<span class="seo-vimeo-play" aria-hidden="true"></span></button>`,
+    )
+  }
+  // les vidéos sont en haut de page (souvent l'élément LCP) : miniature prioritaire, 640 px sur mobile
+  for (const [i, el] of $('.seo-vimeo img').toArray().entries()) {
+    const $img = $(el)
+    const src = $img.attr('src')
+    const small = src.replace(/\.webp$/, '-640.webp')
+    if (!existsSync(path.join(ROOT, small))) {
+      await writeFile(path.join(ROOT, small), await sharp(path.join(ROOT, src)).resize({ width: 640 }).webp({ quality: 80 }).toBuffer())
+    }
+    $img.attr('srcset', `${small} 640w, ${src} 1280w`).attr('sizes', '(max-width: 991px) 100vw, 940px')
+    $img.attr('loading', 'eager').attr('decoding', 'async').removeAttr('fetchpriority')
+    if (i === 0) $img.attr('fetchpriority', 'high')
+  }
+  $('script[data-seo-vimeo]').remove()
+  if ($('.seo-vimeo').length) {
+    $('body').append(
+      `<script data-seo-vimeo>document.addEventListener('click',function(e){var b=e.target.closest('.seo-vimeo');if(!b)return;var f=document.createElement('iframe');f.src=b.getAttribute('data-src');f.setAttribute('allow','autoplay; fullscreen; picture-in-picture');f.setAttribute('allowfullscreen','');f.title=b.getAttribute('aria-label');f.style.cssText=b.style.cssText;f.style.border='0';b.replaceWith(f)});</script>`,
+    )
+  }
+
+  // --- scripts de fin de page (jQuery, Webflow…) : `defer` garde l'ordre d'exécution et les lance
+  // avant DOMContentLoaded, comme aujourd'hui, mais sans retarder le premier rendu
+  if (config.deferBodyScripts) $('body script[src]:not([async])').attr('defer', '')
 
   // --- iframes
   $('iframe').each((_, el) => {
@@ -375,6 +505,50 @@ for (const f of htmlFiles) {
 }
 
 for (const [f, t] of texts) await writeFile(f, t)
+
+// ---------------------------------------------------- 2 bis. CSS critique
+// Le CSS Webflow (≈ 115 Ko) bloquait le premier affichage : les règles utiles à la page sont
+// intégrées dans un <style>, la feuille complète est chargée sans bloquer (media=print → all).
+// Le rendu final est identique : la feuille complète finit toujours par s'appliquer.
+{
+  const { default: Beasties } = await import('beasties')
+  const beasties = new Beasties({
+    path: ROOT,
+    publicPath: '/',
+    preload: 'media',
+    noscriptFallback: true,
+    pruneSource: false,
+    mergeStylesheets: false,
+    reduceInlineStyles: false, // ne pas élaguer les <style> existants (ex. :where(img[width][height]))
+    inlineFonts: false,
+    preloadFonts: false,
+    fonts: false,
+    compress: false,
+    keyframes: 'critical',
+    // états posés par le JavaScript Webflow (menus, interactions) : toujours inclus
+    allowRules: [/w-mod-/, /w--/, /\.w-nav/, /\.w-dropdown/, /seo-vimeo/],
+    logLevel: 'error',
+  })
+  for (const f of htmlFiles) {
+    // retour à l'état d'avant un éventuel passage précédent
+    const $0 = cheerio.load(await readFile(f, 'utf8'), { decodeEntities: false })
+    $0('style[data-seo-critical], noscript[data-seo-critical]').remove()
+    $0('link[data-seo-critical-link]').each((_, el) => {
+      $0(el).removeAttr('media').removeAttr('onload').removeAttr('data-seo-critical-link').attr('rel', 'stylesheet')
+    })
+    const before = new Set($0('style').map((_, e) => $0(e).html()).get())
+    const out = await beasties.process($0.html())
+    const $ = cheerio.load(out, { decodeEntities: false })
+    $('style').each((_, e) => {
+      if (!before.has($(e).html())) $(e).attr('data-seo-critical', '')
+    })
+    $('link[rel="stylesheet"][href^="/css/"][media="print"]').attr('data-seo-critical-link', '')
+    $('noscript').each((_, e) => {
+      if (/href="\/css\//.test($(e).html() || '')) $(e).attr('data-seo-critical', '')
+    })
+    await writeFile(f, $.html())
+  }
+}
 
 // ------------------------------------------------------------- 3. sitemap
 
