@@ -133,6 +133,22 @@ async function vimeoThumb(id, hash) {
   }
 }
 
+/** srcset « src-w480.webp 480w, …, src <largeur>w », variantes générées une fois à côté de l'original */
+async function srcsetFor(src, widths) {
+  const d = await dims(src)
+  const ext = path.extname(src)
+  const fmt = ext.slice(1).toLowerCase().replace('jpg', 'jpeg')
+  const set = []
+  for (const w of widths.filter((w) => w < d.width)) {
+    const v = src.replace(ext, `-w${w}${ext}`)
+    if (!existsSync(path.join(ROOT, v))) {
+      await writeFile(path.join(ROOT, v), await sharp(path.join(ROOT, src)).resize({ width: w }).toFormat(fmt, { quality: 80 }).toBuffer())
+    }
+    set.push(`${v} ${w}w`)
+  }
+  return [...set, `${src} ${d.width}w`].join(', ')
+}
+
 function faqFrom($) {
   const items = []
   $('.question').each((_, el) => {
@@ -346,17 +362,23 @@ for (const file of htmlFiles) {
         `<span class="seo-vimeo-play" aria-hidden="true"></span></button>`,
     )
   }
-  // les vidéos sont en haut de page (souvent l'élément LCP) : miniature prioritaire, 640 px sur mobile
+  // les vidéos sont en haut de page (souvent l'élément LCP) : miniature prioritaire, en taille adaptée
   for (const [i, el] of $('.seo-vimeo img').toArray().entries()) {
     const $img = $(el)
-    const src = $img.attr('src')
-    const small = src.replace(/\.webp$/, '-640.webp')
-    if (!existsSync(path.join(ROOT, small))) {
-      await writeFile(path.join(ROOT, small), await sharp(path.join(ROOT, src)).resize({ width: 640 }).webp({ quality: 80 }).toBuffer())
-    }
-    $img.attr('srcset', `${small} 640w, ${src} 1280w`).attr('sizes', '(max-width: 991px) 100vw, 940px')
+    $img.attr('srcset', await srcsetFor($img.attr('src'), [480, 640, 800]))
+    $img.attr('sizes', '(max-width: 991px) calc(100vw - 20px), 940px')
     $img.attr('loading', 'eager').attr('decoding', 'async').removeAttr('fetchpriority')
     if (i === 0) $img.attr('fetchpriority', 'high')
+  }
+  // images à largeur CSS fixe servies trop grandes (seo.config.json → srcsets, clé = sélecteur CSS ;
+  // uniquement des images dont la largeur est fixée en CSS, sinon `sizes` changerait leur taille)
+  for (const [selector, { widths, sizes }] of Object.entries(config.srcsets || {})) {
+    for (const el of $(selector).toArray()) {
+      const $img = $(el)
+      const src = $img.attr('src') || ''
+      if (!/^\/images\/[^/]+\.(avif|webp|jpe?g|png)$/i.test(src)) continue
+      $img.attr('srcset', await srcsetFor(src, widths)).attr('sizes', sizes)
+    }
   }
   $('script[data-seo-vimeo]').remove()
   if ($('.seo-vimeo').length) {
@@ -453,6 +475,19 @@ for (const file of htmlFiles) {
     $('script').filter((_, el) => ($(el).attr('src') || '').includes(needle) || ($(el).html() || '').includes(needle)).remove()
   }
   $('*').contents().filter((_, n) => n.type === 'comment' && (config.removeScripts || []).length && /Hotjar/i.test(n.data)).remove()
+  // scripts tiers rapatriés (une connexion en moins) et retirés des pages qui ne s'en servent pas
+  for (const [url, { file, onlyIf }] of Object.entries(config.localScripts || {})) {
+    const tags = $('script').filter((_, el) => [url, file].includes(($(el).attr('src') || '').split('?')[0]))
+    if (!tags.length) continue
+    if (onlyIf && !$(onlyIf).length) {
+      tags.remove()
+      continue
+    }
+    if (!existsSync(path.join(ROOT, file))) await writeFile(path.join(ROOT, file), Buffer.from(await (await fetch(url)).arrayBuffer()))
+    tags.each((_, el) => {
+      if ($(el).attr('src').split('?')[0] === url) $(el).attr('src', file)
+    })
+  }
   // Hotjar chargé après la page (le script d'origine pèse sur le temps de blocage)
   $('script:not([src])').each((_, el) => {
     const code = $(el).html() || ''
