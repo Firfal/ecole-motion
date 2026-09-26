@@ -89,6 +89,29 @@ npx firebase-tools init hosting:github
 Formulaires : la base `(default)` est créée en Europe (`eur3`, fixé dans `firebase.json`) au premier `deploy --only firestore`. Sinon activer **Firestore** (console Firebase → Firestore Database → Créer, mode
 production) puis publier les règles une fois : `npx firebase-tools deploy --only firestore`.
 
+## Formulaires → MailerLite (Cloud Function)
+
+`functions/` remplace le zap Webflow → MailerLite : à chaque nouvelle soumission dans
+`form_submissions`, la fonction `formToMailerLite` (europe-west1) crée ou met à jour
+l'abonné dans MailerLite et l'ajoute au groupe configuré dans `functions/forms.config.js`
+(« Formulaire Fichier Source » → groupe `01_Fichier Source`, réabonnement activé). C'est
+l'automatisation MailerLite du groupe qui envoie ensuite le fichier.
+
+Le résultat est écrit sur la soumission : `mailerlite.status` = `ok`, `error` (avec le
+détail) ou `ignored` (e-mail invalide). Les erreurs temporaires (réseau, 429, 5xx) sont
+réessayées automatiquement.
+
+Mise en place (une fois, depuis un clone à jour de `main`) :
+
+```sh
+npx firebase-tools functions:secrets:set MAILERLITE_API_KEY   # clé API MailerLite (Intégrations → API)
+npx firebase-tools deploy --only functions
+```
+
+Ajouter un autre formulaire : une entrée dans `functions/forms.config.js` (clé = nom du
+formulaire dans Webflow, `data-name`), puis redéployer les fonctions.
+Tests : `npm --prefix functions test`.
+
 ## Bascule du domaine (couper Webflow)
 
 1. Déployer, vérifier le site sur `https://ecole-motion.web.app`.
