@@ -86,7 +86,7 @@ npx firebase-tools init hosting:github
   (le workflow du dépôt s'en charge déjà) ; supprimer ensuite les éventuels fichiers
   `.github/workflows/firebase-hosting-*.yml` générés, sans les commiter.
 
-Formulaires : activer **Firestore** (console Firebase → Firestore Database → Créer, mode
+Formulaires : la base `(default)` est créée en Europe (`eur3`, fixé dans `firebase.json`) au premier `deploy --only firestore`. Sinon activer **Firestore** (console Firebase → Firestore Database → Créer, mode
 production) puis publier les règles une fois : `npx firebase-tools deploy --only firestore`.
 
 ## Bascule du domaine (couper Webflow)
