@@ -42,7 +42,12 @@ for (const rel of htmlFiles) {
   const file = path.join(OUT, rel)
   const $ = cheerio.load(await readFile(file, 'utf8'), { decodeEntities: false })
   const dir = path.dirname(rel)
-  $('script[src="/js/forms-firebase.js"]').remove()
+  $('script[src^="/js/forms-firebase.js"]').remove()
+  // empreintes de cache (?v=…) ajoutées par seo.mjs : inutiles pour Instatic
+  $('link[href*=".css?v="],script[src*=".js?v="]').each((_, el) => {
+    const attr = el.name === 'link' ? 'href' : 'src'
+    $(el).attr(attr, $(el).attr(attr).replace(/\?v=[0-9a-f]+$/, ''))
+  })
   $('a[href^="/"]').each((_, el) => {
     const href = $(el).attr('href')
     const m = href.match(/^([^?#]*)([?#].*)?$/)
