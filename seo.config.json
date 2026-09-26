@@ -16,7 +16,7 @@
     ".colonne__questions .question.design-freelance .question_text,.colonne__questions .question.design-freelance .question_text strong{color:#fff}",
     ".colonne__questions .question.design-freelance .answer_text,.colonne__questions .question.design-freelance .answer_text strong{color:rgba(255,255,255,.75)}",
     "/* lien violet sur fond blanc (CGV) */",
-    ".container-1283 a,.container-1283 a strong{color:#824af7}"
+    ".container-1283 p a,.container-1283 p a strong{color:#824af7}"
   ],
   "deferIframes": [
     "miro.com"
