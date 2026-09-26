@@ -102,6 +102,10 @@ const SEO_CSS = [
   ':where(img[width][height]){width:auto;height:auto}',
   // H1 secondaires devenus H2 : mêmes styles de balise que h1 (même spécificité que « h2 »)
   'h2:where(.was-h1){margin-top:0;margin-bottom:0;font-family:Monasans,sans-serif;font-size:38px;font-weight:900;line-height:44px}',
+  // H3 devenus H2 (ordre des titres) : mêmes styles de balise que h3
+  'h2:where(.was-h3){margin-top:20px;margin-bottom:10px;font-family:Cabinetgrotesk,sans-serif;font-size:24px;font-weight:900;line-height:30px}',
+  // zone <main> ajoutée pour l'accessibilité, sans effet sur la mise en page
+  'main[data-seo]{display:contents}',
   ...(config.css || []),
 ].join('\n')
 
@@ -255,6 +259,82 @@ for (const file of htmlFiles) {
     if (!code.includes('app.cal.com/embed/embed.js') || code.includes('/*seo:lazy-cal*/')) return
     $(el).html(`/*seo:lazy-cal*/(function(){var run=function(){${code}\n};var go=function(){var el=document.querySelector('#my-cal-inline');if(!el||!('IntersectionObserver' in window)){run();return}var io=new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting})){io.disconnect();run()}},{rootMargin:'800px'});io.observe(el)};if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',go)}else{go()}})();`)
   })
+
+  // --- performances / bonnes pratiques
+  // API JavaScript Vimeo : chargée deux fois, jamais utilisée (aucun « new Vimeo.Player »)
+  if (!/Vimeo\.Player/.test($.html())) $('script[src*="player.vimeo.com/api/player.js"]').remove()
+  // lecteurs Vimeo sans cookies de suivi (dnt=1) : plus de cookies tiers
+  $('iframe').each((_, el) => {
+    for (const attr of ['src', 'data-seo-src']) {
+      const v = $(el).attr(attr)
+      if (v && /player\.vimeo\.com\/video\//.test(v) && !/[?&]dnt=1/.test(v)) {
+        $(el).attr(attr, v + (v.includes('?') ? '&' : '?') + 'dnt=1')
+      } else if (v && /embedly\.com\/widgets\/media\.html/.test(v)) {
+        // lecteur Vimeo encapsulé par Embedly : dnt=1 dans l'URL du lecteur passée en paramètre
+        const u = new URL(v, 'https://x')
+        const inner = u.searchParams.get('src')
+        if (inner && /player\.vimeo\.com\/video\//.test(inner) && !/[?&]dnt=1/.test(inner)) {
+          u.searchParams.set('src', inner + (inner.includes('?') ? '&' : '?') + 'dnt=1')
+          $(el).attr(attr, (v.startsWith('//') ? '//' + u.host : u.origin) + u.pathname + u.search)
+        }
+      }
+    }
+  })
+  // webfont.js (bloquant) → feuille Google Fonts directe, display=swap, non bloquante
+  const wfLoader = $('script[src*="ajax.googleapis.com/ajax/libs/webfont/"]')
+  const wfCall = $('script:not([src])').filter((_, el) => /WebFont\.load\(/.test($(el).html() || '')).first()
+  if (wfLoader.length && wfCall.length) {
+    const m = (wfCall.html() || '').match(/families:\s*(\[[\s\S]*?\])/)
+    if (m) {
+      const families = JSON.parse(m[1])
+      const href = 'https://fonts.googleapis.com/css?family=' + families.map((f) => f.replace(/ /g, '+')).join('|') + '&display=swap'
+      wfLoader.replaceWith(
+        '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+          '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+          `<link rel="stylesheet" href="${href}" media="print" onload="this.media='all'">` +
+          `<noscript><link rel="stylesheet" href="${href}"></noscript>`,
+      )
+      wfCall.remove()
+    }
+  }
+  // scripts tiers retirés (config « removeScripts » : fragments d'URL ou de code)
+  for (const needle of config.removeScripts || []) {
+    $('script').filter((_, el) => ($(el).attr('src') || '').includes(needle) || ($(el).html() || '').includes(needle)).remove()
+  }
+  $('*').contents().filter((_, n) => n.type === 'comment' && (config.removeScripts || []).length && /Hotjar/i.test(n.data)).remove()
+  // Hotjar chargé après la page (le script d'origine pèse sur le temps de blocage)
+  $('script:not([src])').each((_, el) => {
+    const code = $(el).html() || ''
+    if (!code.includes('static.hotjar.com') || code.includes('/*seo:lazy-hotjar*/')) return
+    $(el).html(`/*seo:lazy-hotjar*/window.addEventListener('load',function(){setTimeout(function(){${code}\n},2000)});`)
+  })
+
+  // --- accessibilité (sans changement visuel)
+  // liens réseaux sociaux composés d'une seule image
+  $('a[href]').each((_, el) => {
+    const $a = $(el)
+    if ($a.attr('aria-label') || $a.text().trim() || $a.find('img[alt]:not([alt=""])').length) return
+    const host = ($a.attr('href').match(/^https?:\/\/(?:www\.)?([^/]+)/) || [])[1] || ''
+    const name = { 'youtube.com': 'YouTube', 'instagram.com': 'Instagram', 'linkedin.com': 'LinkedIn', 'tiktok.com': 'TikTok', 'x.com': 'X', 'twitter.com': 'X', 'facebook.com': 'Facebook' }[host]
+    if (name) $a.attr('aria-label', `Ecole Motion sur ${name}`)
+  })
+  // titres qui sautent un niveau (h1 → h3) : rendus en h2 avec les styles de h3
+  for (const sel of config.promoteToH2 || []) {
+    $(sel).each((_, el) => {
+      if (el.name !== 'h3') return
+      el.name = 'h2'
+      el.tagName = 'h2'
+      $(el).addClass('was-h3')
+    })
+  }
+  // zone principale <main> (display:contents : aucune incidence sur la mise en page)
+  if (!$('main').length) {
+    const kids = $('body').children().filter((_, el) => !['script', 'style', 'noscript', 'link'].includes(el.name))
+    if (kids.length) {
+      kids.first().before('<main data-seo></main>')
+      $('main[data-seo]').append(kids)
+    }
+  }
 
   // --- page de recherche en français
   if (p === '/search') {

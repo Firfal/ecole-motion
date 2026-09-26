@@ -14,6 +14,12 @@
   "deferIframes": [
     "miro.com"
   ],
+  "promoteToH2": [
+    "h3.heading-8"
+  ],
+  "removeScripts": [
+    "static.hotjar.com"
+  ],
   "pages": {
     "/": {
       "jsonld": [
