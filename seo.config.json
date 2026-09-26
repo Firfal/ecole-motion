@@ -16,13 +16,18 @@
     ".colonne__questions .question.design-freelance .question_text,.colonne__questions .question.design-freelance .question_text strong{color:#fff}",
     ".colonne__questions .question.design-freelance .answer_text,.colonne__questions .question.design-freelance .answer_text strong{color:rgba(255,255,255,.75)}",
     "/* lien violet sur fond blanc (CGV) */",
-    ".container-1283 p a,.container-1283 p a strong{color:#824af7}"
+    ".container-1283 p a,.container-1283 p a strong{color:#824af7}",
+    "/* page pack-de-texture : fond violet d'origine (le violet foncé ne s'applique qu'aux boutons) — liens du menu lisibles (5,1:1) */",
+    ".body-3{background-color:#9d72f9}",
+    "/* bouton de la recherche : bleu Webflow par défaut peu lisible (3:1) → violet de la marque (4,9:1) */",
+    "form[action=\"/search\"] input.w-button{background-color:#824af7}"
   ],
   "deferIframes": [
     "miro.com"
   ],
   "promoteToH2": [
-    "h3.heading-8"
+    "h3.heading-8",
+    "h3.heading-18"
   ],
   "removeScripts": [
     "static.hotjar.com"
@@ -76,14 +81,16 @@
     },
     "/ressources/mail-envoye": {
       "noindex": true,
-      "title": "Le fichier arrive ! | Ecole Motion"
+      "title": "Le fichier arrive ! | Ecole Motion",
+      "description": "Le fichier source After Effects arrive dans votre boîte mail. En attendant, découvrez la formation Ecole Motion."
     },
     "/design-system": {
       "noindex": true
     },
     "/search": {
       "noindex": true,
-      "title": "Recherche | Ecole Motion"
+      "title": "Recherche | Ecole Motion",
+      "description": "Rechercher une page, un tutoriel ou une ressource sur Ecole Motion."
     },
     "/404": {
       "noindex": true
@@ -167,8 +174,29 @@
   "deferBodyScripts": true,
   "srcsets": {
     "img.image-3": {
-      "widths": [240, 320],
+      "widths": [
+        240,
+        320
+      ],
       "sizes": "(max-width: 479px) 116px, 154px"
+    },
+    "img.image-8": {
+      "widths": [
+        320
+      ],
+      "sizes": "154px"
+    },
+    ".footer-brand img": {
+      "widths": [
+        400
+      ],
+      "sizes": "192px"
+    },
+    "img.img-testimonial": {
+      "widths": [
+        128
+      ],
+      "sizes": "64px"
     }
   },
   "localScripts": {
@@ -192,9 +220,25 @@
     ],
     "/ressources/pack-de-texture": [
       "01_Wallpaper"
+    ],
+    "/ressources/mail-envoye": [
+      "02_Votre-premiere-animation"
     ]
   },
   "responsiveImages": [
     "image-9"
-  ]
+  ],
+  "sizes": {
+    "img.image-9": "(max-width: 767px) 100vw, (max-width: 1279px) 30vw, 340px",
+    ".div-block-102 > img:not([class])": "(max-width: 767px) 100vw, (max-width: 991px) 30vw, 390px",
+    ".div-block-32 img": "(max-width: 991px) 92vw, 580px",
+    "img.image-15": "(max-width: 991px) 92vw, 440px",
+    "img.image-11": "(max-width: 479px) 90vw, (max-width: 991px) 50vw, 700px"
+  },
+  "selfHostGoogleFonts": true,
+  "preloadGoogleFonts": {
+    "/cgv": [
+      "Inter"
+    ]
+  }
 }
