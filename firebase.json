@@ -10,7 +10,16 @@
     "trailingSlash": false,
     "headers": [
       {
-        "source": "**/*.@(css|js|woff|woff2|ttf|otf|eot|jpg|jpeg|png|gif|webp|avif|svg|ico|mp4|webm|json|lottie)",
+        "source": "**/*.@(css|woff|woff2|ttf|otf|eot|jpg|jpeg|png|gif|webp|avif|svg|ico|mp4|webm|lottie)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(js|json)",
         "headers": [
           {
             "key": "Cache-Control",
