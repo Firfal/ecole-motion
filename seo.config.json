@@ -165,6 +165,7 @@
   ],
   "vimeoFacade": true,
   "deferBodyScripts": true,
+  "delayGtag": true,
   "preloadFonts": [
     "MonaSans-Black."
   ],
