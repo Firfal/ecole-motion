@@ -17,7 +17,7 @@
 import * as cheerio from 'cheerio'
 import sharp from 'sharp'
 import { existsSync } from 'node:fs'
-import { readdir, readFile, stat, unlink, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, stat, unlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 const ROOT = path.resolve(process.argv[2] || 'site')
@@ -131,6 +131,36 @@ async function vimeoThumb(id, hash) {
     console.warn(`miniature Vimeo ${id} indisponible : ${e.message}`)
     return null
   }
+}
+
+/** Feuille Google Fonts rapatriée dans /css/google-fonts.css et ses woff2 dans /fonts/google/ */
+const GOOGLE_CSS = '/css/google-fonts.css'
+const googleFontFiles = new Map() // famille → woff2 « latin » normal 400 (pour le préchargement)
+function indexGoogleFonts(css) {
+  for (const m of css.matchAll(/\/\* latin \*\/\s*@font-face\s*{([^}]*)}/g)) {
+    const family = (m[1].match(/font-family:\s*'([^']+)'/) || [])[1]
+    const url = (m[1].match(/url\(([^)]+\.woff2)\)/) || [])[1]
+    if (family && url && /font-style:\s*normal/.test(m[1]) && /font-weight:\s*400\b/.test(m[1])) googleFontFiles.set(family, url)
+  }
+}
+if (existsSync(path.join(ROOT, GOOGLE_CSS))) indexGoogleFonts(await readFile(path.join(ROOT, GOOGLE_CSS), 'utf8'))
+const googleFontsDone = new Map()
+function googleFontsLocal(href) {
+  if (!googleFontsDone.has(href)) googleFontsDone.set(href, fetchGoogleFonts(href))
+  return googleFontsDone.get(href)
+}
+async function fetchGoogleFonts(href) {
+  const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36'
+  let css = await (await fetch(href.replace(/&amp;/g, '&'), { headers: { 'user-agent': UA } })).text()
+  await mkdir(path.join(ROOT, 'fonts/google'), { recursive: true })
+  for (const url of new Set([...css.matchAll(/url\((https:\/\/fonts\.gstatic\.com\/[^)]+)\)/g)].map((m) => m[1]))) {
+    const rel = '/fonts/google/' + url.split('/').slice(-3).join('-')
+    if (!existsSync(path.join(ROOT, rel))) await writeFile(path.join(ROOT, rel), Buffer.from(await (await fetch(url)).arrayBuffer()))
+    css = css.split(url).join(rel)
+  }
+  await writeFile(path.join(ROOT, GOOGLE_CSS), css)
+  indexGoogleFonts(css)
+  return { css: GOOGLE_CSS }
 }
 
 /** srcset « src-w480.webp 480w, …, src <largeur>w », variantes générées une fois à côté de l'original */
@@ -380,6 +410,9 @@ for (const file of htmlFiles) {
       $img.attr('srcset', await srcsetFor(src, widths)).attr('sizes', sizes)
     }
   }
+  // `sizes` de Webflow trop larges (ex. 940px pour une vignette affichée en 330 px sur ordinateur) :
+  // valeurs mesurées sur le rendu réel (seo.config.json → sizes, clé = sélecteur CSS)
+  for (const [selector, sizes] of Object.entries(config.sizes || {})) $(selector).filter('[srcset]').attr('sizes', sizes)
   $('script[data-seo-vimeo]').remove()
   if ($('.seo-vimeo').length) {
     $('body').append(
@@ -469,6 +502,25 @@ for (const file of htmlFiles) {
       )
       wfCall.remove()
     }
+  }
+  // Google Fonts servies depuis le site : deux connexions tierces en moins, et préchargement
+  // possible (seo.config.json → preloadGoogleFonts : page → familles)
+  if (config.selfHostGoogleFonts) {
+    const gLink = $('link[rel="stylesheet"][href^="https://fonts.googleapis.com/css"]').first()
+    if (gLink.length) {
+      const gHref = gLink.attr('href')
+      const local = await googleFontsLocal(gHref)
+      gLink.attr('href', local.css)
+      $('noscript').each((_, el) => {
+        const h = $(el).html() || ''
+        if (h.includes('fonts.googleapis.com')) $(el).html(h.replace(/https:\/\/fonts\.googleapis\.com\/css[^"]*/, local.css))
+      })
+      $('link[rel="preconnect"][href^="https://fonts.g"]').remove()
+    }
+  }
+  for (const family of config.preloadGoogleFonts?.[p] || []) {
+    const f = googleFontFiles.get(family)
+    if (f) $('head').append(`<link rel="preload" as="font" type="font/woff2" href="${f}" crossorigin data-seo-preload>`)
   }
   // scripts tiers retirés (config « removeScripts » : fragments d'URL ou de code)
   for (const needle of config.removeScripts || []) {
