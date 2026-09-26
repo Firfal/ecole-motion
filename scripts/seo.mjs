@@ -69,6 +69,15 @@ for (const f of files) {
   savedBytes += size - buf.length
 }
 
+// ------------------------------------------- 1 bis. couleurs (contraste WCAG)
+
+// seo.config.json → cssReplace : [[motif regex, remplacement]] appliqués au CSS du site
+// (ex. fonds violets derrière du texte blanc, trop peu contrastés)
+for (const [pattern, replacement] of config.cssReplace || []) {
+  const re = new RegExp(pattern, 'gi')
+  for (const f of cssFiles) texts.set(f, texts.get(f).replace(re, replacement))
+}
+
 // ------------------------------------------------------------ 2. pages HTML
 
 const dimsCache = new Map()
