@@ -9,7 +9,14 @@
   },
   "css": [
     "/* vignettes des tutoriels : largeur finale réservée avant chargement (CLS 0,53 → 0) */",
-    ".image-9{width:100%}"
+    ".image-9{width:100%}",
+    "/* contraste WCAG AA : violet de marque plus soutenu pour le texte sur fond clair (4,6:1) */",
+    ".text-block-32,.text-block.purple,.p-text.purple-light{color:#824af7}",
+    "/* FAQ de /formation-freelance : texte violet foncé sur fond violet foncé (1,35:1), illisible */",
+    ".colonne__questions .question.design-freelance .question_text,.colonne__questions .question.design-freelance .question_text strong{color:#fff}",
+    ".colonne__questions .question.design-freelance .answer_text,.colonne__questions .question.design-freelance .answer_text strong{color:rgba(255,255,255,.75)}",
+    "/* lien violet sur fond blanc (CGV) */",
+    ".container-1283 a,.container-1283 a strong{color:#824af7}"
   ],
   "deferIframes": [
     "miro.com"
@@ -149,5 +156,11 @@
     "Animer-une-ligne.avif": "Tutoriel After Effects : animer une ligne",
     "Animer-un-liquide.avif": "Tutoriel After Effects : animer un liquide",
     "Animation-degrade.avif": "Tutoriel After Effects : animer un dégradé"
-  }
+  },
+  "cssReplace": [
+    [
+      "background-color:\\s*(?:var\\(--purple-700-main\\)|#9d72f9)(?![0-9a-f])",
+      "background-color: #824af7"
+    ]
+  ]
 }
