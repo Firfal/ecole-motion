@@ -98,16 +98,6 @@
     "*": [
       "Logo-temporaire-5.webp"
     ],
-    "/ressources/fichiers-sources": [
-      "Cours-After-Effects.avif",
-      "Barre-de-recherche.avif",
-      "Texte-sur-un-trace.jpg",
-      "Animation-de-plante.avif",
-      "Planete-en-3D.avif",
-      "Animation-ADN.avif",
-      "Piece-en-3D.jpg",
-      "Element-en-orbite.jpg"
-    ],
     "/ressources/mail-envoye": [
       "02_Votre-premiere-animation.webp"
     ]
@@ -206,9 +196,6 @@
     ]
   },
   "lcpImages": {
-    "/ressources/fichiers-sources": [
-      "Cours-After-Effects.avif"
-    ],
     "/ressources/mail-envoye": [
       "02_Votre-premiere-animation"
     ]
@@ -229,6 +216,9 @@
       "Inter"
     ],
     "/ressources/pack-de-texture": [
+      "Inter"
+    ],
+    "/ressources/fichiers-sources": [
       "Inter"
     ]
   }
