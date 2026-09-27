@@ -71,9 +71,7 @@
       "title": "Fichiers sources After Effects gratuits | Ecole Motion",
       "description": "Téléchargez gratuitement les fichiers sources de plus de 25 tutoriels After Effects : effets de texte, 3D, liquides, dégradés, compteurs et bien plus."
     },
-    "/ressources/pack-de-texture": {
-      "title": "Pack de textures gratuit | Ecole Motion"
-    },
+    "/ressources/pack-de-texture": {},
     "/ressources/fichier-source": {
       "noindex": true,
       "title": "Recevoir le fichier source | Ecole Motion",
@@ -99,13 +97,6 @@
   "eagerImages": {
     "*": [
       "Logo-temporaire-5.webp"
-    ],
-    "/ressources/pack-de-texture": [
-      "01_Wallpaper.webp",
-      "02_Pres-1.webp",
-      "03_Pres-2.webp",
-      "04_Pres-3.webp",
-      "05_Pres-4.webp"
     ],
     "/ressources/fichiers-sources": [
       "Cours-After-Effects.avif",
@@ -218,9 +209,6 @@
     "/ressources/fichiers-sources": [
       "Cours-After-Effects.avif"
     ],
-    "/ressources/pack-de-texture": [
-      "01_Wallpaper"
-    ],
     "/ressources/mail-envoye": [
       "02_Votre-premiere-animation"
     ]
@@ -238,6 +226,9 @@
   "selfHostGoogleFonts": true,
   "preloadGoogleFonts": {
     "/cgv": [
+      "Inter"
+    ],
+    "/ressources/pack-de-texture": [
       "Inter"
     ]
   }
