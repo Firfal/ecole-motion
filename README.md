@@ -8,6 +8,8 @@ pour une édition visuelle.
 site/                  ← le site statique servi par Firebase (généré par `npm run mirror`)
 static/                ← fichiers propres au projet, copiés dans site/ à chaque aspiration
   js/forms-firebase.js ← remplace Webflow Forms (envois → Firestore)
+  ressources/pack-de-texture.html ← page refaite hors Webflow (aperçu des textures recolorables)
+  images/pack-de-texture/, documents/ ← aperçus des 37 textures et ZIP du pack
 scripts/
   mirror.mjs           ← aspire ecolemotion.com + toutes ses ressources Webflow
   check.mjs            ← vérifie : aucun lien cassé, aucune ressource Webflow restante
