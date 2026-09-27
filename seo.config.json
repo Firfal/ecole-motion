@@ -205,7 +205,7 @@
       "onlyIf": "[js-util-countdown]"
     }
   },
-  "delayGtag": true,
+  "delayGtag": false,
   "preloadFonts": [
     "MonaSans-Black."
   ],
