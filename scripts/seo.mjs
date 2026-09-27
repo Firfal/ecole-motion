@@ -434,6 +434,13 @@ for (const file of htmlFiles) {
         `<script data-seo-gtag>(function(){var d=0,ev=['pointerdown','keydown','scroll','touchstart'];function l(){if(d)return;d=1;ev.forEach(function(e){removeEventListener(e,l,true)});var s=document.createElement('script');s.async=true;s.src='${src}';document.head.appendChild(s)}ev.forEach(function(e){addEventListener(e,l,{capture:true,passive:true,once:true})});addEventListener('load',function(){setTimeout(l,4000)})})();</script>`,
       )
     })
+  } else {
+    // option désactivée : balise d'origine rétablie (chargement async immédiat). Mesuré le 27/09/2026 :
+    // aucun écart de score mobile une fois le reste optimisé, et aucune visite perdue dans les stats
+    $('script[data-seo-gtag]').each((_, el) => {
+      const src = (($(el).html() || '').match(/s\.src='([^']+)'/) || [])[1]
+      if (src) $(el).replaceWith(`<script async src="${src.replace(/&/g, '&amp;')}"></script>`)
+    })
   }
 
   // --- iframes
