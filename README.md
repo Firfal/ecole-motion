@@ -34,7 +34,7 @@ npm run seo        # corrections SEO (seo.config.json)
 npm run check      # contrôle d'intégrité (aussi lancé par la CI)
 npm run serve      # prévisualisation locale sur http://localhost:5000
 npm run instatic   # dist/instatic-import.zip
-npm run deploy     # déploiement manuel (nécessite `firebase login`)
+npm run deploy:firestore  # règles Firestore (le site, lui, ne se publie que via GitHub)
 ```
 
 ## Ce que fait l'aspiration
@@ -73,6 +73,13 @@ Différences volontaires avec Webflow :
 `.github/workflows/deploy.yml` :
 - **pull request** → URL de prévisualisation Firebase (valable 7 jours) postée sur la PR ;
 - **push sur `main`** → mise en production.
+
+Le site ne se publie **que** par ce workflow : `firebase.json` lance `scripts/guard-deploy.mjs`
+avant tout déploiement du site, qui refuse s'il ne tourne pas dans GitHub Actions sur ce dépôt
+(un `firebase deploy` lancé depuis un ordinateur s'arrête avec un message). Firestore et les
+fonctions ne sont pas concernés. Urgence uniquement :
+`ECOLE_MOTION_DEPLOY_MANUEL=1 npx firebase-tools deploy --only hosting`.
+Pour revenir à une version précédente : console Firebase → Hosting → historique des versions → *Rollback*.
 
 À configurer une fois, **depuis un clone de ce dépôt** (le dossier doit contenir `firebase.json`) :
 

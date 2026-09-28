@@ -8,7 +8,7 @@
     "check": "node scripts/check.mjs",
     "serve": "npx --yes firebase-tools@latest emulators:start --only hosting",
     "instatic": "node scripts/package-instatic.mjs",
-    "deploy": "npx --yes firebase-tools@latest deploy --only hosting,firestore"
+    "deploy:firestore": "npx --yes firebase-tools@latest deploy --only firestore"
   },
   "repository": {
     "type": "git",
